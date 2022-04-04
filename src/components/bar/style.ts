@@ -9,6 +9,7 @@ interface StyledArrowProps {
 }
 
 export const StyledBar = styled.div`
+    flex:1;
     margin:auto;
     max-height:80vh;
 `
@@ -27,8 +28,10 @@ export const StyledPlayer = styled.div<StyledPlayerProps>`
 `
 
 export const StyledClock = styled.div`
-    width:200px;
-    height:200px;
+    width:80%;
+    max-height:200px;
+    aspect-ratio:1/1;
+    margin:auto;
     border:solid 2px #fff;
     border-radius:50%;
     position:relative;

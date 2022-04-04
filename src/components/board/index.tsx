@@ -23,7 +23,6 @@ export default function Board() {
 
     return (
         <BoardWrapper>
-            <Bar />
             <StyledBoard>
                 {matrix &&
                     matrix.map((line: TileElement[]) => (
@@ -40,7 +39,6 @@ export default function Board() {
                     ))
                 }
             </StyledBoard>
-            <History />
         </BoardWrapper>
 
     )

@@ -1,4 +1,6 @@
+import Bar from './components/bar';
 import Board from './components/board';
+import History from './components/history';
 import { GameProvider } from './contexts/gameContext';
 import GlobalStyle from './globalStyles';
 
@@ -9,7 +11,11 @@ function App() {
     <div className="App">
       <GlobalStyle />
       <GameProvider>
-        <Board />
+        <>
+          <Bar />
+          <Board />
+          <History />
+        </>
       </GameProvider>
     </div>
   );

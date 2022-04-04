@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const StyledHistory = styled.div`
+    flex:1;
     margin:auto;
     border:solid 2px #fff;
     padding:20px;
@@ -11,6 +12,7 @@ export const StyledHistory = styled.div`
 
 export const StyledUl = styled.ul`
     padding:0;
+    text-align:center;
 `
 
 export const StyledLi = styled.li`
