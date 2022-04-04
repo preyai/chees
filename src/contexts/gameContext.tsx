@@ -1,5 +1,6 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { FigureElement, Position } from "../components/figure";
+import { HistoryItem } from "../components/history";
 import { TileElement, TileProps } from "../components/tile";
 import { createMatrix } from "../utils/matrix";
 import { createPlayer, PlayerInterface } from "../utils/player";
@@ -12,7 +13,9 @@ interface gameContextInterface {
     resetAvalible: () => void,
     select: FigureElement | null,
     setSelect: Dispatch<SetStateAction<FigureElement | null>>,
-    move: (tile: TileElement) => void
+    move: (tile: TileElement) => void,
+    history: HistoryItem[],
+    time: number
 }
 
 interface GameProviderInterface {
@@ -27,7 +30,9 @@ const GameContex = createContext<gameContextInterface>({
     resetAvalible: () => { },
     select: null,
     setSelect: () => null,
-    move: (tile: TileElement) => { }
+    move: (tile: TileElement) => { },
+    history: [],
+    time: 0
 })
 
 export function GameProvider({ children }: GameProviderInterface) {
@@ -38,7 +43,23 @@ export function GameProvider({ children }: GameProviderInterface) {
     ])
     const [activePlayer, setActivePlayer] = useState<PlayerInterface>(players[0])
     const [select, setSelect] = useState<FigureElement | null>(null)
+    const [history, setHistory] = useState<HistoryItem[]>([])
+    const [time, setTime] = useState<number>(60)
 
+    useEffect(() => {
+        const timerID = setInterval(() => tick(), 1000);
+        return () => clearInterval(timerID)
+    }, [])
+
+    const tick = () => {
+        setTime((prev) => {
+            if (prev && prev > 0)
+                return prev - 1
+            else
+                endTurn()
+            return 0
+        })
+    }
 
     function resetAvalible(): void {
         const clone = matrix.slice();
@@ -71,17 +92,29 @@ export function GameProvider({ children }: GameProviderInterface) {
             }
             if (select.name === 'Pawn')
                 select.pattern.length = 1
+            setHistory(history.concat([{ figure: select, start: select.position, end: tile.position }]))
             select.position = tile.position
-            setSelect(null)
-            resetAvalible()
-            const newPlayer = players.find(p => p.color !== activePlayer.color)
-            if (newPlayer)
-                setActivePlayer(newPlayer)
-            const clone = matrix.slice()
-            setMatrix(clone)
+
+            endTurn();
+
             // const clone2 = players.slice();
             // setPlayers(clone2);
         }
+    }
+
+    function reRender() {
+        const clone = matrix.slice();
+        setMatrix(clone);
+    }
+
+    function endTurn() {
+        setSelect(null)
+        resetAvalible()
+        const newPlayer = players.find(p => p.color !== activePlayer.color);
+        if (newPlayer)
+            setActivePlayer(newPlayer);
+        setTime(60)
+        reRender();
     }
 
     return (
@@ -93,11 +126,24 @@ export function GameProvider({ children }: GameProviderInterface) {
             resetAvalible,
             select,
             setSelect,
-            move
+            move,
+            history,
+            time
         }}>
             {children}
         </GameContex.Provider>
     )
+
+}
+
+function tick(time: number, setTime: Dispatch<SetStateAction<number>>, endTurn: () => void) {
+    console.log(time);
+
+    if (time > 0)
+        setTime(time - 1);
+
+    else
+        endTurn();
 }
 
 export function useGameContext() {

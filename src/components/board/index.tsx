@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useGameContext } from "../../contexts/gameContext";
 import { PlayerInterface } from "../../utils/player";
+import Bar from "../bar";
 import { FigureElement, Position } from "../figure";
+import History from "../history";
 import { TileElement, TileProps } from "../tile";
 import { BoardWrapper, StyledBoard } from "./style";
 
@@ -21,6 +23,7 @@ export default function Board() {
 
     return (
         <BoardWrapper>
+            <Bar />
             <StyledBoard>
                 {matrix &&
                     matrix.map((line: TileElement[]) => (
@@ -37,6 +40,7 @@ export default function Board() {
                     ))
                 }
             </StyledBoard>
+            <History />
         </BoardWrapper>
 
     )
