@@ -1,5 +1,8 @@
-import { SvgProps } from "./interfaces";
-import { StyledCircle, StyledPath, StyledSvg } from "./style";
+import { StyledSvg, StyledPath, StyledCircle } from "./style"
+
+export interface SvgProps {
+    color: string
+}
 
 export function KingSvg(props: SvgProps) {
     const { color } = props

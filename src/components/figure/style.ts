@@ -1,12 +1,16 @@
 import styled from "styled-components";
 
-export const StyledFigure = styled.div`
+interface FigureWrapperProps {
+    scale:Boolean
+}
+
+export const FigureWrapper = styled.div<FigureWrapperProps>`
+    transform:scale(${props => props.scale ? 1.2 : 1});
     display:flex;
     align-items:center;
     justify-content:center;
     height:100%;
     width:100%;
-    transform:scale(${props => props.scale});
 `
 
 export const StyledSvg = styled.svg`

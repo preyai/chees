@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-export const BoardElement = styled.div`
-    margin:auto;
+export const StyledBoard = styled.div`
+margin:auto;
     display:grid;
     grid-template-columns: repeat(8,minmax( 10px, 10vh));
     grid-template-rows: repeat(8, minmax( 10px, 10vh));

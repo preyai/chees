@@ -1,24 +1,43 @@
-import { Tile } from "../../models/Tile";
-import TileElement from "../tile";
-import { BoardElement, BoardWrapper } from "./style";
+import { useEffect, useState } from "react";
+import { useGameContext } from "../../contexts/gameContext";
+import { PlayerInterface } from "../../utils/player";
+import { FigureElement, Position } from "../figure";
+import { TileElement, TileProps } from "../tile";
+import { BoardWrapper, StyledBoard } from "./style";
 
-interface BoardProps {
-    matrix: Tile[][]
+const isPos = (p1: Position, p2: Position) => {
+    return (p1.x === p2.x && p1.y === p2.y)
 }
 
-export default function Board(props: BoardProps) {
+export default function Board() {
+    const { matrix, players } = useGameContext()
+    const [figures, setFigures] = useState<FigureElement[]>([])
 
-    const { matrix } = props
+    useEffect(() => {
+        setFigures(players.reduce(
+            (p: FigureElement[], c: PlayerInterface) => { return p.concat(c.figures) }, []
+        ))
+    }, [players])
 
     return (
         <BoardWrapper>
-            <BoardElement>
-                {matrix.map(line => (
-                    line.map(item => (
-                        <TileElement color={item.color} figure={item.figure && item.figure} />
+            <StyledBoard>
+                {matrix &&
+                    matrix.map((line: TileElement[]) => (
+                        line.map((tile: TileElement) => {
+                            const figure = figures.find(f => isPos(f.position, tile.position))
+                            if (figure)
+                                tile.figure = figure
+                            else
+                                tile.figure = undefined
+                            return (
+                                tile.constructor({ tile: tile, figure: figure })
+                            )
+                        })
                     ))
-                ))}
-            </BoardElement>
+                }
+            </StyledBoard>
         </BoardWrapper>
+
     )
 }
